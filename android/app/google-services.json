@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "331466135655",
+    "project_id": "club-de-palma",
+    "storage_bucket": "club-de-palma.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331466135655:android:3c2b5e5b9ef19c5a325cc2",
+        "android_client_info": {
+          "package_name": "com.technyk.clubdepalma"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKmtwb8cZDNVvrXl_P7eRUK82gzYNSmbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

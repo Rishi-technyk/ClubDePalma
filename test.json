@@ -1,0 +1,19 @@
+{
+    "GSTper": "18",
+    "charge": "800",
+    "created_at": "2025-02-21 15:45:59",
+    "description": "<p>Billiards Room</p>",
+    "first_image": "/public/game/slider/1744706650.svg",
+    "id": "5",
+    "inventory": "2",
+    "is_available_slots": true,
+    "max_days": "30",
+    "min_days": "1",
+    "name": "Billiards Room",
+    "second_image": "/public/game/slider/1740474438.jpg",
+    "short_description": "A space for cue sports.",
+    "slug": "billiards-room",
+    "status": "Active",
+    "third_image": "/public/game/slider/1740474438.webp",
+    "updated_at": "2025-04-15 14:14:10"
+}

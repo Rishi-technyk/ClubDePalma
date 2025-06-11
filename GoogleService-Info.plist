@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDatfQyNtPlHSjNSf5KTdI7w7kfUn_aQYI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>331466135655</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.technyk.clubdepalma</string>
+	<key>PROJECT_ID</key>
+	<string>club-de-palma</string>
+	<key>STORAGE_BUCKET</key>
+	<string>club-de-palma.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:331466135655:ios:0967011dd32a0e93325cc2</string>
+</dict>
+</plist>
