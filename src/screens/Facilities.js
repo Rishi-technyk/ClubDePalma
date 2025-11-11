@@ -150,6 +150,7 @@ const Facilities = ({ route, navigation }) => {
     <View style={{ flex: 1,}}>
       <Header title={"Activity"}>
         <TouchableOpacity
+           activeOpacity={0.9}
           style={{
             borderWidth: 0.8,
             borderColor: "white",
@@ -165,7 +166,7 @@ const Facilities = ({ route, navigation }) => {
           </Text>
         </TouchableOpacity>
       </Header>
-        <Text style={[styles.price,{textAlign:'center'}]}>You can book slots from 1 to 30 days.</Text>
+        <Text style={[styles.price,{textAlign:'center'}]}>You can book slots from {facility?.min_days} to {facility?.max_days} days.</Text>
 
       <ScrollView
         contentContainerStyle={{ backgroundColor: "white" }}
@@ -181,13 +182,14 @@ const Facilities = ({ route, navigation }) => {
         <Card style={styles.container}>
          
             <View style={styles.rowCenter}>
-              <SvgUri
-                height={40}
-                width={40}
-                source={{
-                  uri: `https://booking.panchshilaclub.org${facility?.first_image}`,
-                }}
-              />
+                 <Image
+                       height={50}
+                       width={50}
+                       style={{ alignSelf: "center" }}
+                       source={{
+                         uri: `https://dynamixclubedepalma.co.in/clubdepalma${facility?.third_image}`,
+                       }}
+                     />
               <Text style={styles.text}>{facility?.name}</Text>
             </View>
            
@@ -210,7 +212,7 @@ const Facilities = ({ route, navigation }) => {
                   // minDate={new Date()}
                   // minDate={facility?.min_days}
                     minDate={moment().add(parseInt(facility?.min_days || 0), 'days').toDate()}
-                    maxDate={moment().add(parseInt(facility?.max_days || 0), 'days').toDate()}
+                    maxDate={moment().add(parseInt(facility?.max_days-4 || 0), 'days').toDate()}
                   stateDate={(date) => {
                     setTempStartDate(date);
                   }}
@@ -412,6 +414,7 @@ const Facilities = ({ route, navigation }) => {
               navigation.navigate("ChoosePlayer", {
                 slots: selectedSlots,
                 facility,
+                session
               })
             }
           />
@@ -425,6 +428,7 @@ const Facilities = ({ route, navigation }) => {
         }
         setVisible={setVisible}
       >
+       
         {selectedSlots.map((slots, index) => (
           <View
             key={index}
@@ -537,7 +541,7 @@ const styles = StyleSheet.create({
   },
   itemContainerStyle: { color: "grey", fontFamily: FONT_FAMILY.normal },
   container: {
-    margin: 20,
+    margin: 10,
     backgroundColor: "white",
     padding: 10,
     // marginTop: -40,
@@ -599,7 +603,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONT_FAMILY.normal,
     color: DARK_BLUE,
-    fontWeight: "500",
   },
   left: {
     fontSize: 10,

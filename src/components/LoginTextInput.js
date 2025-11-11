@@ -62,7 +62,7 @@ const LoginTextInput = ({
                 : secureTextEntry
             }
             maxLength={maxLength ? maxLength : 20}
-            style={[styles.textInput,{paddingVertical:Platform.OS=='ios'&&20}]}
+            style={[styles.textInput,{paddingVertical:Platform.OS=='ios'&&15}]}
             keyboardType={keyboardType}
             onChangeText={onChangeText}
             placeholderTextColor="#363b5d"

@@ -442,7 +442,8 @@ const ViewStatement = ({ navigation }) => {
         />
       </ScrollView>
       <Modal
-        transparent={true}
+        // transparent={true}
+        
         dismissableBackButton={true}
         statusBarTranslucent={true}
         animationType="slide"
@@ -451,7 +452,7 @@ const ViewStatement = ({ navigation }) => {
         presentationStyle={
           Platform.OS === "ios" ? "pageSheet" : "overFullScreen"
         }
-        style={{ alignItems: "flex-end", flex: 1, justifyContent: "flex-end" }}
+        style={{ alignItems: "flex-end", flex: 1, justifyContent: "flex-end",}}
         dismissable={true}>
         <View style={InvoiceStyles.modal}>
           <View style={InvoiceStyles.innerModalCont}>
@@ -511,10 +512,13 @@ const ViewStatement = ({ navigation }) => {
                   flex: 1,
                   marginHorizontal: 20,
                 }}>
-                <DatePickerComponent
+                  <View style={{marginBottom:20}}>
+<DatePickerComponent
                   placeholder={"Select Start date"}
                   stateDate={setTempStartDate}
                 />
+                  </View>
+                
                 <DatePickerComponent
                   placeholder={"Select End date"}
                   stateDate={setTempEndDate}
@@ -1127,7 +1131,7 @@ const emptyList = () => (
 //             width: '100%',
 //           }}>
 //           <Image
-//             source={require('../../assets/images/clubdepalma.png')}
+//             source={require('../../assets/images/clubdepalma.jpg')}
 //             style={{height: 30, width: 30, borderRadius: 15}}
 //           />
 //           <Text

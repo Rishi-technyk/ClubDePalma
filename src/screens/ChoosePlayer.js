@@ -20,12 +20,13 @@ import {
   DARK_BLUE,
   LIGHT_BLUE,
   LIGHT_GREEN,
+  LIGHT_RED,
   SECONDARY_COLOR,
 } from "../util/colors";
 import { Card, Checkbox } from "react-native-paper";
 import { ENDPOINT, FONT_FAMILY } from "../util/constant";
 import moment from "moment";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList, Pressable, ScrollView } from "react-native-gesture-handler";
 import UniversalModal from "../components/UniversalModal";
 import NewButton from "../components/Button";
 import _ from "lodash";
@@ -34,6 +35,7 @@ import * as api from "../util/api";
 import { Toast } from "react-native-toast-notifications";
 import { CustomCheckbox } from "../components/CustomCheckBox";
 import CancelButton from "../components/CancelButton";
+import { Dropdown } from "react-native-element-dropdown";
 const ChoosePlayer = ({ route, navigation }) => {
   const userData = useSelector((state) => state.auth.userData);
   const params = route.params;
@@ -41,6 +43,7 @@ const ChoosePlayer = ({ route, navigation }) => {
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [searchPlayer, setSearchPlayer] = useState(null);
   const [slots, setSlots] = useState(params.slots);
+  const [selectedGameType, setGameType] = useState(null);
   const facility = params.facility;
   const [agree, setAgree] = useState(false);
   const [showPolicies, setShowPolicies] = useState(false);
@@ -53,7 +56,6 @@ const ChoosePlayer = ({ route, navigation }) => {
     facility?.id,
     userData
   );
-  console.log('\x1b[36m%s\x1b[0m', userData?.data?.data[0]?.MemberID, '---------------------- userData?.data?.data[0]?.MemberID,---------------------');
   const subTotal = useMemo(() => {
     // Base amount: facility charge * number of slots
     const baseAmount = Number(facility.charge || 0) * slots.length;
@@ -71,9 +73,7 @@ const ChoosePlayer = ({ route, navigation }) => {
     const totalAmount = baseAmount + extraCharges;
     return Number(totalAmount).toFixed(2);
   }, [facility.charge, slots]);
-
   const handleBookFacility = async () => {
-    
     Toast.hideAll();
     if (!agree) {
       Toast.show("Please accept the terms and conditions.", {
@@ -94,27 +94,60 @@ const ChoosePlayer = ({ route, navigation }) => {
 
       return;
     }
-  
+
+    const guestTotal = slots?.reduce((total, item) => {
+      const playerTotal =
+        item.players?.reduce((acc, player) => {
+          return acc + Number(player?.charge || 0);
+        }, 0) || 0;
+
+      return total + playerTotal;
+    }, 0);
+    const subtotal = Number(facility.charge) + guestTotal;
+    const gstAmount = Number(facility?.GSTper)
+      ? (subtotal * Number(facility.GSTper)) / 100
+      : 0;
+    const totalWithGst = subtotal + gstAmount;
     const apiobject = {
       path: ENDPOINT.book_facilities,
       body: {
         memberId: userData.data.data[0].MemberID,
         slots,
-        payble_amount: Number((subTotal / 100) * facility.GSTper + Number(subTotal))
-     
-       
+        session_id: params?.session?.id,
+        facility_id: facility.id,
+        charge: facility.charge,
+        guest_total_amount: guestTotal,
+        facility_gst_per: facility?.GSTper,
+        facility_gst_amt: Number((subTotal / 100) * facility.GSTper),
+        game_type_id: selectedGameType?.id || null,
+        payble_amount: Number(
+          (subTotal / 100) * facility.GSTper + Number(subTotal)
+        ),
       },
+      Token: userData.data.token,
     };
     try {
       setLoading(true);
       const response = await api.javascriptPost(apiobject);
-      console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
-      
+      console.log(
+        "\x1b[36m%s\x1b[0m",
+        response,
+        "---------------------- response ---------------------"
+      );
+
       setLoading(false);
-      if (response?.status  && response.data && response.data.url) {
+      if (response?.status && response.data && response.data.url) {
         Toast.show(response?.message, {
           type: "success",
         });
+
+        // navigation.navigate("Home");
+        navigation.navigate("PaymentWebView", {
+          data: response.data,
+          member_id: userData?.data?.data[0]?.MemberID,
+          type: "Activity",
+        });
+        // setAmount(0);
         setSlots([]);
         setSearch("");
         setAgree(false);
@@ -123,34 +156,24 @@ const ChoosePlayer = ({ route, navigation }) => {
         setShowPolicies(false);
         setSearchPlayer(false);
         setDebouncedSearch("");
-        navigation.addListener("focus", () => {
-       
-        });
-        // navigation.navigate("Home");
-         navigation.navigate("PaymentWebView", {
-        data:response.data,
-          member_id: userData?.data?.data[0]?.MemberID,
-         type:'Activity'
-        });
-        // setAmount(0);
-    
-
-        
-      
       } else {
         Toast.show(response?.message, {
           type: "danger",
         });
       }
     } catch (error) {
-      console.log('\x1b[36m%s\x1b[0m', error, '---------------------- error ---------------------');
+      console.log(
+        "\x1b[36m%s\x1b[0m",
+        error,
+        "---------------------- error ---------------------"
+      );
       Toast.show("Error occurred while booking facility", {
         type: "danger",
       });
     }
   };
   const toastRef = useRef(null);
-  console.log(selectedFacility, "selectedSlot");
+
   useEffect(() => {
     const handler = _.debounce(() => {
       setDebouncedSearch(search);
@@ -162,9 +185,9 @@ const ChoosePlayer = ({ route, navigation }) => {
   }, [search]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Header title={"Booking Summary"} />
-      <ScrollView contentContainerStyle={{ margin: 10 }}>
+    <View style={{ flex: 1, backgroundColor: "#EEEEEE" }}>
+      <Header title={"Booking Details"} />
+      <ScrollView contentContainerStyle={{ margin: 10, paddingBottom: 20 }}>
         <Text
           style={[
             styles.price,
@@ -173,6 +196,38 @@ const ChoosePlayer = ({ route, navigation }) => {
         >
           {slots.length + ` ${slots.length > 1 ? "Slots" : "Slot"} Selected`}
         </Text>
+        <Dropdown
+          style={[styles.dropdown]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          containerStyle={{
+            backgroundColor: "white",
+            borderRadius: 10,
+            marginTop: 10,
+          }}
+          itemTextStyle={styles.itemContainerStyle}
+          iconStyle={styles.iconStyle}
+          data={gameQuery?.data?.data?.gameTypes || []}
+          maxHeight={300}
+          labelField="name"
+          valueField="id"
+          placeholder={"Select Game Type"}
+          value={selectedGameType?.id}
+          onChange={(item) => {
+            setGameType(item);
+            setSlots((prev) =>
+              prev.map((item) => ({ ...item, players: null }))
+            );
+          }}
+          renderItem={(item) => (
+            <View style={{ padding: 20 }}>
+              <Text style={{ color: "black", fontFamily: FONT_FAMILY.normal }}>
+                {item.name} ({item.no_of_players}{" "}
+                {item.no_of_players > 1 ? "Players" : "Player"})
+              </Text>
+            </View>
+          )}
+        />
 
         <FlatList
           contentContainerStyle={{
@@ -187,8 +242,10 @@ const ChoosePlayer = ({ route, navigation }) => {
             <View
               style={{
                 paddingBottom: 10,
-                backgroundColor: index % 2 !== 0 ? "white" : LIGHT_BLUE,
+                backgroundColor: "white",
                 padding: 10,
+                borderRadius: 5,
+                marginBottom: 10,
               }}
             >
               <View
@@ -204,19 +261,15 @@ const ChoosePlayer = ({ route, navigation }) => {
                   <Text
                     style={[styles.price, { fontFamily: FONT_FAMILY.semiBold }]}
                   >
-                    {facility?.name}
+                    {facility?.name} ({" "}
+                    {moment(item?.day?.session_date).format("DD-MMMM-YYYY")})
                   </Text>
-                  <Text style={[styles.price]}>
+                  <Text style={[styles.price,{fontFamily:FONT_FAMILY.light}]}>
                     {`${moment(item?.time?.name, "HHmm").format(
                       "hh:mm A"
                     )} to ${moment(item?.time?.name.slice(5, 8), "HHmm").format(
                       "hh:mm A"
                     )}`}{" "}
-                  </Text>
-                  <Text
-                    style={[styles.price, { fontFamily: FONT_FAMILY.semiBold }]}
-                  >
-                    {moment(item?.day?.session_date).format("DD-MMMM-YYYY")}
                   </Text>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
@@ -239,19 +292,21 @@ const ChoosePlayer = ({ route, navigation }) => {
                       styles.rowCenter,
                       {
                         justifyContent: "space-between",
-                        alignItems: "flex-start",
+                        alignItems: "flex-start",paddingTop:5,
                       },
                     ]}
                     key={index}
                   >
                     {/* <Text style={styles.price}>Player {index+1}</Text> */}
 
-                    <Text style={[styles.price2, { textAlign: "left" }]}>
+                    <Text style={[styles.price2, { textAlign: "left",fontFamily:FONT_FAMILY.semiBold,color:'black' }]}>
                       <Text>
                         {index + 1}. {player.DisplayName}
                       </Text>{" "}
                       (
-                      {player.occupant_id == 2 ? "Non Memeber" : player.MemberID}
+                      {player.occupant_id == 2
+                        ? "Non Memeber"
+                        : player.MemberID}
                       )
                     </Text>
                     <Text
@@ -266,10 +321,16 @@ const ChoosePlayer = ({ route, navigation }) => {
                   justifyContent: "space-between",
                   flexDirection: "row",
                   marginTop: 10,
+                  flex:1
                 }}
               >
-                <CancelButton
-                  text={"Remove Slot"}
+                <Pressable
+                  style={{
+                    backgroundColor: LIGHT_RED,
+                    padding: 8,
+                    borderRadius: 5,
+                    alignSelf: "flex-start",
+                  }}
                   onPress={() => {
                     LayoutAnimation.configureNext({
                       duration: 300,
@@ -286,35 +347,43 @@ const ChoosePlayer = ({ route, navigation }) => {
                         property: LayoutAnimation.Properties.opacity,
                       },
                     });
-                    console.log(
-                      "\x1b[36m%s\x1b[0m",
-                      slots.length,
-                      "----------------------  slots.length ---------------------"
-                    );
+
                     slots.length !== 1
                       ? setSlots(slots.filter((_, i) => i !== index))
                       : navigation.goBack();
                   }}
-                />
+                >
+                  <Text style={{ color: "red", fontFamily: FONT_FAMILY.bold }}>
+                    Remove Slot
+                  </Text>
+                </Pressable>
+               
                 {item.players?.length > 0 ? (
-                  <CancelButton
-                    onPress={() => {
-                      LayoutAnimation.configureNext({
-                        duration: 300,
-                        create: {
-                          type: LayoutAnimation.Types.linear,
-                          property: LayoutAnimation.Properties.opacity,
-                        },
-                        update: {
-                          type: LayoutAnimation.Types.linear,
-                          property: LayoutAnimation.Properties.opacity,
-                        },
-                        delete: {
-                          type: LayoutAnimation.Types.linear,
-                          property: LayoutAnimation.Properties.opacity,
-                        },
-                      });
-                      setSlots((prev) => {
+                    <Pressable
+                  style={{
+                    backgroundColor: LIGHT_RED,
+                    padding: 8,
+                    borderRadius: 5,
+                    alignSelf: "flex-start",
+                  }}
+                  onPress={() => {
+                    LayoutAnimation.configureNext({
+                      duration: 300,
+                      create: {
+                        type: LayoutAnimation.Types.linear,
+                        property: LayoutAnimation.Properties.opacity,
+                      },
+                      delete: {
+                        type: LayoutAnimation.Types.linear,
+                        property: LayoutAnimation.Properties.opacity,
+                      },
+                      update: {
+                        type: LayoutAnimation.Types.linear,
+                        property: LayoutAnimation.Properties.opacity,
+                      },
+                    });
+
+                    setSlots((prev) => {
                         const updatedSlots = [...prev];
                         updatedSlots[index] = {
                           ...updatedSlots[index],
@@ -322,25 +391,44 @@ const ChoosePlayer = ({ route, navigation }) => {
                         };
                         return updatedSlots;
                       });
-                    }}
-                    style={[
-                      styles.price,
-                      {
-                        color: "red",
-                        fontFamily: FONT_FAMILY.semiBold,
-                      },
-                    ]}
-                    text={"Clear All Players"}
-                  />
+                  }}
+                >
+                  <Text style={{ color: "red", fontFamily: FONT_FAMILY.bold }}>
+                    Clear All Players
+                  </Text>
+                </Pressable>
+                  
                 ) : (
-                  <NewButton
+               
+                  <Pressable
+                    style={{
+                      backgroundColor: LIGHT_GREEN,
+                      padding: 8,
+                      borderRadius: 5,
+                     
+                    }}
                     onPress={() => {
+                      if (!selectedGameType) {
+                        Toast.hideAll();
+                        Toast.show("Please select game type first.", {
+                          type: "warning",
+                        });
+                        return;
+                      }
                       setSearchPlayer(true);
                       setSelectedFacility(facility);
                       setSelectedSlot(item);
                     }}
-                    text={"Select Player(s)"}
-                  />
+                  >
+                    <Text
+                      style={{
+                        color: SECONDARY_COLOR,
+                        fontFamily: FONT_FAMILY.bold,
+                      }}
+                    >
+                      Select Player(s)
+                    </Text>
+                  </Pressable>
                 )}
               </View>
             </View>
@@ -383,7 +471,12 @@ const ChoosePlayer = ({ route, navigation }) => {
             ]}
           >
             <Text style={styles.price}>Grand Total:</Text>
-            <Text style={[styles.price, { fontFamily: FONT_FAMILY.bold }]}>
+            <Text
+              style={[
+                styles.price,
+                { fontFamily: FONT_FAMILY.bold, fontSize: 17 },
+              ]}
+            >
               ₹
               {Number(
                 (subTotal / 100) * facility.GSTper + Number(subTotal)
@@ -475,18 +568,10 @@ const ChoosePlayer = ({ route, navigation }) => {
           </Text>
           <Text style={styles.price}>
             <Text style={[styles.price, { fontFamily: FONT_FAMILY.semiBold }]}>
-              {` \n\n We understand that plans can change. However, to ensure fairness to all participants and to maintain operational efficiency, the following cancellation policy applies:`}
-            </Text>
-            {`\n\nCancellations made within ${
-              gameQuery.data?.data?.cancellation_policy[0]?.from_days || 0
-            } to ${
-              gameQuery.data?.data?.cancellation_policy[0]?.to_days || 10
-            } days of the scheduled game will incur: ${
-              gameQuery.data?.data?.cancellation_policy[0]?.deduction || 10
-            }% cancellation fee of the total booking amount. ${
-              gameQuery.data?.data?.cancellation_policy[0]?.GST || 10
-            }% GST applicable on the cancellation fee. Theremaining amount (after deductions) will be refunded to the original payment method within 5–7 business days. For any queries or assistance, please contact our support team.`}
-          </Text>
+              {` \n\n We understand that plans can change. However, to ensure fairness to all participants and to maintain operational efficiency.`}
+            </Text>  {` \n\n Cancellations charged as per cancellation policy.`}
+            
+             </Text>
         </View>
         <View style={{ alignSelf: "flex-end", justifyContent: "flex-end" }}>
           <NewButton
@@ -510,7 +595,7 @@ const ChoosePlayer = ({ route, navigation }) => {
           setSearch={setSearch}
           selectedSlot={selectedSlot}
           setSelectedSlot={setSelectedSlot}
-          gameType={gameQuery?.data?.data}
+          selectedGameType={selectedGameType}
           refetch={guestQuery}
           toastRef={toastRef}
         />
@@ -524,12 +609,12 @@ export default ChoosePlayer;
 const styles = StyleSheet.create({
   dropdown: {
     height: 50,
-    borderColor: "#ccc",
-    borderWidth: 1,
+    borderColor: "rgb(11, 96, 161)",
     borderRadius: 8,
     paddingHorizontal: 8,
-    margin: 16,
-    backgroundColor: "#fff",
+    marginTop: 10,
+    backgroundColor: "white",
+    borderWidth: 1,
     color: "black",
     fontFamily: FONT_FAMILY.normal,
   },
@@ -551,6 +636,7 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 16,
     color: "#333",
+    fontFamily: FONT_FAMILY.normal,
   },
   itemContainerStyle: {
     fontSize: 16,

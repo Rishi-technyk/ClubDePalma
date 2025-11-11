@@ -123,7 +123,7 @@ const fetchSlots = async (id, session_id, date, token) => {
     };
 
     const response = await api.javascriptPost(apiRequestObject);
-    return response;
+   return response;
   } catch (error) {
     console.error(error, "from api");
   }
@@ -135,36 +135,37 @@ const fetchSessions = async (id, session_id, token) => {
       body: {},
       Token: token,
     };
-    console.log(
-      apiRequestObject,
+   
+    let response = await api.javascriptGet(apiRequestObject);
+ console.log(
+      response,
       "apiRequestObject apiRequestObject apiRequestObject"
     );
-    let response = await api.javascriptGet(apiRequestObject);
-
     return response;
   } catch (error) {}
 };
-const fetchPlayers = async (memberId, token) => {
+const fetchPlayers = async (memberId, token,Active,NonMember,Member) => {
   try {
     const apiRequestObject = {
       path: ENDPOINT.favorite_players,
       body: {
-        memberId: memberId,
+        is_favorite: Active ?1:0,
+        member: Member,
+        nonmember: NonMember,
       },
       Token: token,
     };
-    console.log(
-      apiRequestObject,
-      "apiRequestObject apiRequestObject apiRequestObject"
-    );
+    console.log('\x1b[36m%s\x1b[0m', apiRequestObject, '---------------------- apiRequestObject ---------------------');
+    
     const response = await api.javascriptPost(apiRequestObject);
-    return response;
-  } catch (error) {}
+     return response;
+  } catch (error) {
+    console.log('\x1b[36m%s\x1b[0m', error, '---------------------- error ---------------------');
+  }
 };
 
-export const useSlots = (id, session_id, date, userData) => {
-  const token = userData?.data?.token;
-  // Fetch facility slots
+export const useSlots = (id, session_id, date, token) => {
+ // Fetch facility slots
   const slotsQuery = useQuery({
     queryKey: ["slots", id || "", session_id || 0, date, token],
     queryFn: () => fetchSlots(id, session_id, date, token),
@@ -176,7 +177,7 @@ export const useSlots = (id, session_id, date, userData) => {
   // Fetch sessions (only once at first render if token exists)
   const sessionsQuery = useQuery({
     queryKey: ["sessions"],
-    queryFn: () => fetchSessions(),
+    queryFn: () => fetchSessions(id || "", session_id || 0, token),
     enabled: true,
     staleTime: Infinity, // never refetch unless manually
     cacheTime: Infinity, // keep it in cache forever
@@ -208,9 +209,10 @@ const getGuests = async (member_id, page, search,token) => {
       }?page=${page}&search=${search}`,
 
       body: {},
+      Token:token
     };
-    const response = await api.javascriptGet(apiRequestObject);
-    return response||[];
+   const response = await api.javascriptGet(apiRequestObject);
+  return response||[];
   } catch (error) {
    
   }
@@ -218,7 +220,7 @@ const getGuests = async (member_id, page, search,token) => {
 
 export const usePlayers = (page, search, facility, userData) => {
   const token = userData?.data?.token;
-  const member_id = userData?.data?.data?.[0]?.MemberID;
+  const member_id = userData?.data?.data?.[0]?.id;
   // Fetch facility slots
   const guestQuery = useQuery({
     queryKey: ["guests", member_id, page || 1, search, token],
@@ -241,15 +243,15 @@ export const usePlayers = (page, search, facility, userData) => {
   return { guestQuery, gameQuery };
 };
 
-export const usePlayersQuery = ( userData) => {
+export const usePlayersQuery = ( userData,Active,NonMember,Member) => {
   const token = userData?.data?.token;
-   const member_id = userData?.data?.data?.[0]?.MemberID;
-
+   const member_id = userData?.data?.data?.[0]?.id;
+   console.log('\x1b[36m%s\x1b[0m',Active, '----------------------Member -----1----------------');
   // Fetch sessions (only once at first render if token exists)
   const playersQuery = useQuery({
-    queryKey: ["players"],
-    queryFn: () => fetchPlayers(member_id,token),
-    enabled: true,
+    queryKey: ["players", Active, NonMember, Member],
+    queryFn: () => fetchPlayers(member_id,token,Active,NonMember,Member),
+    enabled: !!token , 
     staleTime: Infinity, // never refetch unless manually
     cacheTime: Infinity, // keep it in cache forever
     retry: 1,

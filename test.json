@@ -1,19 +1,72 @@
-{
-    "GSTper": "18",
-    "charge": "800",
-    "created_at": "2025-02-21 15:45:59",
-    "description": "<p>Billiards Room</p>",
-    "first_image": "/public/game/slider/1744706650.svg",
-    "id": "5",
-    "inventory": "2",
-    "is_available_slots": true,
-    "max_days": "30",
-    "min_days": "1",
-    "name": "Billiards Room",
-    "second_image": "/public/game/slider/1740474438.jpg",
-    "short_description": "A space for cue sports.",
-    "slug": "billiards-room",
-    "status": "Active",
-    "third_image": "/public/game/slider/1740474438.webp",
-    "updated_at": "2025-04-15 14:14:10"
-}
+[
+    {
+        "amount": null,
+        "bankErrorCode": null,
+        "bankErrorMessage": null,
+        "card": null,
+        "epgTxnId": null,
+        "error": true,
+        "errorCode": "JP_000",
+        "errorMessage": "Reason not available",
+        "event": "process_result",
+        "gatewayId": null,
+        "merchantId": null,
+        "orderId": "6499a725eb5130e903e6_SCR",
+        "payload": {
+            "action": "paymentPage",
+            "otherInfo": {
+                "response": null,
+                "status": null
+            },
+            "paymentFlows": null,
+            "paymentInstrument": "NB_AVENUETEST",
+            "paymentInstrumentGroup": "NB",
+            "status": "authorization_failed",
+            "statusId": null
+        },
+        "paymentGatewayResponse": null,
+        "paymentMethod": null,
+        "paymentMethodType": null,
+        "paymentWidgetInfo": null,
+        "requestId": "426f01383cf04164a63a873ccad72267",
+        "returnUrl": null,
+        "service": "in.juspay.hyperpay",
+        "txnDetail": null,
+        "upi": null
+    },
+    {
+        "amount": null,
+        "bankErrorCode": null,
+        "bankErrorMessage": null,
+        "card": null,
+        "epgTxnId": null,
+        "error": false,
+        "errorCode": "",
+        "errorMessage": "",
+        "event": "process_result",
+        "gatewayId": null,
+        "merchantId": null,
+        "orderId": "e467389ec5054ca2c83d_SCR",
+        "payload": {
+            "action": "paymentPage",
+            "otherInfo": {
+                "response": null,
+                "status": null
+            },
+            "paymentFlows": null,
+            "paymentInstrument": "NB_AVENUETEST",
+            "paymentInstrumentGroup": "NB",
+            "status": "charged",
+            "statusId": null
+        },
+        "paymentGatewayResponse": null,
+        "paymentMethod": null,
+        "paymentMethodType": null,
+        "paymentWidgetInfo": null,
+        "requestId": "d7cd7e59fe894d3cbb05704630f6d7d5",
+        "returnUrl": null,
+        "service": "in.juspay.hyperpay",
+        "txnDetail": null,
+        "upi": null
+    }
+]

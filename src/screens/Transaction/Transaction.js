@@ -860,7 +860,7 @@ const Transaction = ({navigation}) => {
             width: '100%',
           }}>
           <Image
-            source={require('../../assets/images/clubdepalma.png')}
+            source={require('../../assets/images/clubdepalma.jpg')}
             style={{height: 30, width: 30, borderRadius: 15}}
           />
           <Text
@@ -2142,7 +2142,7 @@ export default Transaction;
 //                             width: '100%'
 //                         }}>
 //                             <Image
-//                                 source={require('../../assets/images/clubdepalma.png')}
+//                                 source={require('../../assets/images/clubdepalma.jpg')}
 //                                 style={{ height: 30, width: 30, borderRadius: 15 }}
 //                             />
 //                             <Text style={{ color: 'black', fontSize: 20, marginBottom: 5, marginLeft: 5 }}>MB Club</Text>

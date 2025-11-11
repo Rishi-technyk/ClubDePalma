@@ -1325,10 +1325,52 @@ PODS:
     - Yoga
   - react-native-blob-util (0.19.11):
     - React-Core
+  - react-native-blur (4.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-date-picker (5.0.7):
     - React-Core
   - react-native-html-to-pdf (0.12.0):
     - React-Core
+  - react-native-image-picker (8.2.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-netinfo (11.3.2):
     - React-Core
   - react-native-pdf (6.7.5):
@@ -1843,8 +1885,10 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-html-to-pdf (from `../node_modules/react-native-html-to-pdf`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
@@ -1987,10 +2031,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-html-to-pdf:
     :path: "../node_modules/react-native-html-to-pdf"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-pdf:
@@ -2136,8 +2184,10 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 4a9b9131acbd8326b1f0e768d0ad63d981a4a92f
   React-microtasksnativemodule: 8b2d1ac72763e0f7aa2d1dcbe26ea84124948ec8
   react-native-blob-util: f7234c91ad0e3faeee51b3edee80b61553f74993
+  react-native-blur: 3d5dd1ed2dd810b304ac3bcee9cf7d460757c89b
   react-native-date-picker: 585252087d4820b4cd8f2cf80068f6e8f5b72413
   react-native-html-to-pdf: 7a49e6c58ac5221bcc093027b195f4b214f27a9d
+  react-native-image-picker: 6390bb8352ac38cad29f4d2569510137db21702e
   react-native-netinfo: ce102083db558237dac20cf64172ef569ebe2dd9
   react-native-pdf: 58e0b0d938c63bd08fb9c2d852a9dfc1b79af2e2
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd

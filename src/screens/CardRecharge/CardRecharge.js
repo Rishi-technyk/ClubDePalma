@@ -838,7 +838,7 @@ const emptyList = () => (
 //             width: '100%',
 //           }}>
 //           <Image
-//             source={require('../../assets/images/clubdepalma.png')}
+//             source={require('../../assets/images/clubdepalma.jpg')}
 //             style={{height: 30, width: 30, borderRadius: 15}}
 //           />
 //           <Text

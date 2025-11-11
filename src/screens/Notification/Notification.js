@@ -34,8 +34,20 @@ const NotificationListScreen = ({ navigation, route }) => {
   };
  useEffect(() => {
     fetchNotifications();
+   
   }, []);
-
+  useEffect(() => {
+    console.log('\x1b[36m%s\x1b[0m',route.params , '----------------------  ---------------------');
+    if (route.params?.id) {
+      const notificationId = route.params.id;
+      const selectedNotification = notificationdata.find(
+        (item) => item.id === notificationId
+      );
+      if (selectedNotification) {
+        navigation.navigate("NotificationDetailScreen", { data: selectedNotification });
+      }
+    }
+  }, [notificationdata]);
   const renderItem = ({ item }) => (
 
     <Card
@@ -216,6 +228,7 @@ const styles = StyleSheet.create({
   seeText: {
     fontFamily: FONT_FAMILY.normal,
     fontSize: 15,
+    color:'grey'
   },
   
 });

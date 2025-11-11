@@ -25,7 +25,7 @@ const PickPlayers = ({
   facility,
   searchPlayer = false,
   setSearchPlayer,
-  gameType,
+  selectedGameType,
   guestQuery,
   selectedSlot,
   setSelectedSlot,
@@ -37,7 +37,6 @@ const PickPlayers = ({
 }) => {
   const userData = useSelector((state) => state.auth.userData);
 
-  const [selectedGameType, setGameType] = useState(null);
   const [selectedPlayers, setSelectedPlayers] = useState(null);
   const [newPlayer, setNewPlayer] = useState(false);
   const [addNewPlayer, setAddNewPlayer] = useState({
@@ -45,7 +44,6 @@ const PickPlayers = ({
     email: "",
     mobile: "",
   });
-console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlayer ---------------------');
 
   const handlePlayerSelect = (item) => {
   
@@ -87,30 +85,7 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
       ]);
     }
   };
-  const handleGameTypeChange = (game) => {
-    if (selectedPlayers?.length > 0) {
-      Alert.alert(
-        "Are you sure?",
-        "Changing the game type will remove all selected players.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              setSelectedPlayers([]);
-              setGameType(game);
-            },
-          },
-        ]
-      );
-      return;
-    }
-    setGameType(game);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  };
+
   const handleDeletePlayer = (index) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedPlayers(selectedPlayers.filter((_, i) => i !== index));
@@ -148,13 +123,6 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(addNewPlayer.email)) {
-      //  ToastAndroid.TOP("Enter a valid email address");
-      Alert.alert("Enter a valid email address");
-
-      return;
-    }
 
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(addNewPlayer.mobile)) {
@@ -162,6 +130,13 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(addNewPlayer.email)) {
+      //  ToastAndroid.TOP("Enter a valid email address");
+      Alert.alert("Enter a valid email address");
+
+      return;
+    }
     const apiobject = {
       path: ENDPOINT.create_activity_guest,
       body: {
@@ -169,9 +144,9 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
         email: addNewPlayer.email,
         mobile: addNewPlayer.mobile,
         game_type: selectedGameType?.id,
-        member_id: userData.data.data[0].MemberID,
         occupant_id: 2,
       },
+      Token: userData?.data?.token,
     };
    const response=await javascriptPost(apiobject)
     if (response.success) {
@@ -183,6 +158,7 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
       });
       setNewPlayer(false);
       Alert.alert(response.message);
+      guestQuery.refetch();
     }
     if (!response.success) {
       // Loop through the message object and show an alert for each error
@@ -200,25 +176,12 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
         if (
           item.day.id === selectedSlot.day.id &&
           item.time.id === selectedSlot.time.id
-        ) {
-          const guestTotal = selectedPlayers.reduce(
-            (acc, player) => acc + Number(player?.charge || 0),
-            0
-          );
-          const subtotal = Number(facility.charge) + guestTotal;
-          const gstAmount = Number(facility?.GSTper)
-            ? (subtotal * Number(facility.GSTper)) / 100
-            : 0;
-          const totalWithGst = subtotal + gstAmount;
+        ) {    
           return {
             ...item,
             players: selectedPlayers,
             game_type_id: selectedGameType?.id,
-            charge: facility.charge,
-            guest_total_amount: guestTotal,
-            facility_gst_per: facility?.GSTper,
-            facility_gst_amt: gstAmount,
-            facility_total: totalWithGst,
+       
           };
         }
         return item;
@@ -235,44 +198,7 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
       isFull={true}
       setVisible={() => setSearchPlayer(false)}
     >
-        <Text style={[styles.price3,{marginVertical:10}]}>Game Type:</Text>
-        <Card style={{backgroundColor:LIGHT_BLUE,borderRadius:8,padding:10}}>
-
-      <View style={[styles.rowCenter, { justifyContent: "space-between",}]}>
-
-        {gameType?.gameTypes.map((i) => (
-          <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => handleGameTypeChange(i)}
-          style={{
-            //   marginLeft: "3%",
-            alignItems: "center",
-            backgroundColor:LIGHT_BLUE ,padding:8,borderRadius:8
-          }}
-          >
-            <CustomCheckbox
-             onToggle={() => handleGameTypeChange(i)}
-             checked={selectedGameType?.id === i?.id }
-             
-             />
-            <Text
-              style={[
-                styles.price,
-                {
-                  fontFamily: FONT_FAMILY.bold,
-                  color: gameType?.id == i?.id ? "black" : "black",
-                },
-              ]}
-              >
-              {i.name}
-            </Text>
-            <Text style={[styles.price]}>
-              {i.no_of_players} {i.no_of_players > 1 ? "Players" : "Player"}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-        </Card>
+      
       {selectedPlayers?.map((item, index) => (
         <View
           style={{
@@ -368,6 +294,7 @@ console.log('\x1b[36m%s\x1b[0m',selectedPlayers, '---------------------- newPlay
         data={guestQuery?.data?.data?.data}
         renderItem={renderMembers}
       />
+   
     </UniversalModal>
   );
 };

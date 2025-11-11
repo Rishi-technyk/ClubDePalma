@@ -266,7 +266,7 @@ const ChangePassword = ({ navigation }) => {
         }}
       >
         <Image
-          source={require("../../assets/images/clubdepalma.png")}
+          source={require("../../assets/images/clubdepalma.jpg")}
           style={{ height: 30, width: 30, borderRadius: 20 }}
         />
         <Text
@@ -682,7 +682,7 @@ export default ChangePassword;
 //             <BackIcon />
 //             <View style={{flexDirection: 'row', alignItems: 'center'}}>
 //               <Image
-//                 source={require('../../assets/images/clubdepalma.png')}
+//                 source={require('../../assets/images/clubdepalma.jpg')}
 //                 style={{height: 25, width: 25, borderRadius: 15, marginLeft: 5}}
 //               />
 //               <Text style={{marginLeft: 5, color: 'black'}}>MB Club</Text>

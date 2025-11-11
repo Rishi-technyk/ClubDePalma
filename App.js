@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   StatusBar,
-  LogBox,
-  Platform,
-  StyleSheet,
-  View,
-  Text,
+
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";
@@ -22,6 +18,7 @@ import { DARK_BLUE, LIGHT_GREEN, SECONDARY, SECONDARY_COLOR } from "./src/util/c
 import {  ToastProvider,  } from "react-native-toast-notifications";
 import Icon from "react-native-vector-icons/Ionicons";
 import { FONT_FAMILY } from "./src/util/constant";
+import { navigationRef } from "./src/Navigation/ NavigationService";
 
 const client = new QueryClient();
 const Application = () => {
@@ -56,7 +53,9 @@ const Application = () => {
         <ToastProvider
        placement="top"
        duration={2000}
-       animationType="zoom-in"
+       offsetTop={50}
+       textStyle={{fontFamily:FONT_FAMILY.normal}}
+       animationType="slide-in"
        animationDuration={300}
        successColor={'rgba(120, 202, 20, 0.78)'}
        style={{borderRadius:30,fontFamily:FONT_FAMILY.normal}}
@@ -75,12 +74,14 @@ const Application = () => {
        normalColor="gray"
        swipeEnabled={true}>
           <QueryClientProvider client={client}>
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
               <SafeAreaProvider>
-                <SafeAreaView style={{ flex: 1, backgroundColor: DARK_BLUE, }} >
+                <SafeAreaView
+                  edges={["top",]}
+                  forceInset={{ top: "always", bottom: "always" }}
+                  style={{ flex: 1, backgroundColor: DARK_BLUE, }} >
                   <PaperProvider>
                     <BaseContainer />
-                   
                   </PaperProvider>
                 </SafeAreaView>
               </SafeAreaProvider>

@@ -32,7 +32,7 @@ export const ENDPOINT = {
   otp: "member/otp",
   card_balance: "member/card_balance",
   account_summary: "member/account_summary",
-  get_facility: "get-facility",
+  get_facility: "member/get-facility",
   transaction: "member/transaction",
   menus: "menus",
   transaction_filter: "member/transaction_filter",
@@ -55,21 +55,25 @@ export const ENDPOINT = {
   create_pay_order: "create_pay_order",
 
   //Facility
-  get_slots: "get-facility-slots/",
-  sessions: "get-sessions",
-  game_type: "get-game-type/",
-  get_guest_info: "get-guest-info/",
-  create_activity_guest:'create-activity-guest',
-  book_facilities:'book-facilities',
+  get_slots: "member/get-facility-slots/",
+  sessions: "member/get-sessions",
+  game_type: "member/get-game-type/",
+  get_guest_info: "member/get-guest-info/",
+  create_activity_guest:'member/create-activity-guest',
+  update_activity_guest:'member/update-activity-guest/',
+  book_facilities:'member/book-facilities',
 
   //Bookings
-  get_booking_details:'get-booking-details/',
-  get_cancellation_amount:'get-cancellation-amount/',
-  cancel_booking:'cancel-booking',
+  get_booking_details:'member/get-booking-details/',
+  get_cancellation_amount:'member/get-cancellation-amount/',
+  cancel_booking:'member/cancel-booking',
 
   //players
-  favorite_players: "favorite-players",
-  editPlayer:'edit-player',
+  favorite_players: "member/favorite-players",
+  editPlayer:'member/edit-player',
+
+  //banners
+  facility_banners:'member/facility-banners'
 };
 
 // export const WS_TYPE = {
@@ -94,11 +98,11 @@ export const DateTimeFormat = {
 };
 
 export const FONT_FAMILY = {
-  normal: "OpenSans",
-  semiBold: "OpenSans-Semibold",
-  bold: "OpenSans-Bold",
-  light: "OpenSans-Light",
-  lobeter: "Lobster-Regular",
+  normal: "Quicksand-Regular",
+  semiBold: "Quicksand-SemiBold",
+  bold: "Quicksand-Bold",
+  light: "Quicksand-Light",
+  lobeter: "Quicksand-Regular",
   Cinzel: "Cinzel-Regular",
   Muli: "Muli",
 };

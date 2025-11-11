@@ -17,21 +17,25 @@ import { FONT_FAMILY,SECONDARY_COLOR } from '../../util/constant';
 import { Toast } from 'react-native-toast-notifications';
 const Contact = () => {
   const Items = [
+     {
+      id: 0,
+      icon: "manage-accounts",
+      text: 'Vishal Roy, CEO'   },
     {
       id: 1,
       icon: "location-on",
-      text: `Clube de Palma, Aldeia de Goa, Bambolim, Goa 400004`,
+      text: `CLUBE DE PALMA, H. No. ADG/15/PH/II, NEAR PHASE II GATE, ALDEIA DE GOA, BAMBOLIM, GOA`,
     },
     {
       id: 2,
       icon: "email",
-      text: `john.smith@clubedepalma.co.in`,
+      text: `vishal.roy@dynamixgroup.co.in`,
       color: "rgb(36, 126, 252)",
     },
     {
       id: 3,
       icon: "call",
-      text: `+91-9876543210`,
+      text: `+91-8301826935`,
       color: "rgb(36, 126, 252)",
     },
    
@@ -150,6 +154,7 @@ const Contact = () => {
                       color: 'black',
                       fontFamily: FONT_FAMILY.normal,
                       color: item.color ? item.color : 'black',
+                      flex: 1,
                     }}>
                     {item.text}
                   </Text>

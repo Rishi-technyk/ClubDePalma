@@ -5,9 +5,14 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import LoginTextInput from '../../components/LoginTextInput';
 import {
+  DARK_BLUE,
   PRIMARY_BUTTON_BLUE,
 } from '../../util/colors';
 import {SigninWithOTPScreenService} from './SigninWithOTPScreenService.js';
@@ -23,6 +28,7 @@ const SignInWithOtp = ({navigation}) => {
   const {width, height} = Dimensions.get('window');
 
   const signInSendOTP = async () => {
+    
     Toast.hideAll();
     const trimmedUsername = usernameTextValue.replace(/ /g, '');
      
@@ -38,11 +44,13 @@ const SignInWithOtp = ({navigation}) => {
     try {
       let response = await SigninWithOTPScreenService(usernameTextValue);
       setLoadingData(false);
+      console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
       if (response.status === true) {
         Toast.show(
           response.message,
           {type: 'success',}
         );
+        setUsernameTextValue('');
         navigation.navigate('VerifySigninOTP', {
           memberID: usernameTextValue,
         });
@@ -62,12 +70,41 @@ const SignInWithOtp = ({navigation}) => {
   };
 
   return (
-    <View style={Loginstyles.container}>
+  <KeyboardAvoidingView
+   style={{ flex: 1, backgroundColor: DARK_BLUE }}
+   behavior={Platform.OS === 'ios' && 'padding' }
+   keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+ >
+   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+     <View
+       keyboardShouldPersistTaps="handled"
+       style={{
+         flex:1,
+         flexGrow: 1,
+         justifyContent: 'center',
+         paddingHorizontal: 20,
+         backgroundColor: DARK_BLUE,
+       }}
+     >
+
+          <View style={[Loginstyles.innerContainer,{marginBottom: 100}]}>
+           
+
+                  <Image
+                             source={require("../../assets/images/clubdepalma.jpg")}
+                             style={Loginstyles.logo}
+                           />
+                           <Text style={Loginstyles.headdingTitle}>CLUBE de PALMA</Text>
+                      
+           
+                 
+               </View>
       <Svg
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         style={{position: 'absolute', flex: 1}}>
+          
         <Path
           d={`M 0 ${height * 0.45}
                         C ${width * 0.5} ${height * 0.5}, 
@@ -78,23 +115,20 @@ const SignInWithOtp = ({navigation}) => {
           fill={PRIMARY_BUTTON_BLUE}
         />
       </Svg>
-      <View style={Loginstyles.innerContainer}>
-        <Image
-          source={require('../../assets/images/clubdepalma.png')}
-          style={Loginstyles.logo}
-        />
-        <Text style={Loginstyles.headdingTitle}>CLUBE de PALMA</Text>
-      </View>
-
+     
       <Text style={Loginstyles.signInText}>Sign In with OTP</Text>
-      <View style={[Loginstyles.card, {alignSelf: 'center'}]}>
-        <View>
-          <Text style={Loginstyles.versionText}>
-            To Sign In, please enter the Member ID associated with your account.
+     
+      <View style={[Loginstyles.card, ]}>
+          {/* <View style={{ marginVertical: 20 }}> */}
+        {/* <View>
+          <Text 
+          numberOfLines={4}
+          style={Loginstyles.versionText}>
+            Please enter the Member ID associated with your account.
             We will send you a OTP to Login.
           </Text>
-        </View>
-        <View style={{marginVertical: 20}}>
+        </View> */}
+        <View style={{marginVertical: 10}}>
           <Text
             style={{
               fontFamily: FONT_FAMILY.bold,
@@ -121,14 +155,20 @@ const SignInWithOtp = ({navigation}) => {
           onPress={signInSendOTP}
           text={'Send OTP'}
         />
-        <TouchableOpacity
+       <TouchableOpacity
           style={Loginstyles.backToSignInButton}
           activeOpacity={0.8}
           onPress={() => navigation.goBack()}>
           <Text style={Loginstyles.backToSignInText}>Back to Sign In</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      {/* </View> */}
+
+ 
+      </View>
+  </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+   
   );
 };
 export default SignInWithOtp;

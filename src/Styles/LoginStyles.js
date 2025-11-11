@@ -2,6 +2,7 @@ import {StyleSheet} from 'react-native';
 import {
   DARK_BLUE,
   GREY_COLOR,
+  LIGHT_BLUE,
   PRIMARY_BUTTON_BLUE,
   PRIMARY_COLOR,
 } from '../util/colors';
@@ -17,14 +18,23 @@ export const Loginstyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 30,
+   
   },
   logo: {height: 30, width: 30, borderRadius: 20, resizeMode: 'cover'},
   headdingTitle: {
+     fontSize: 20,
     color: 'white',
-    fontSize: 20,
-    marginBottom: 5,
-    marginLeft: 5,
+    textAlign: 'left',
+    fontFamily: FONT_FAMILY.normal,
+    marginLeft: 10,
+    
+  },
+  textInput:{
+      color: 'black',
+    borderBottomWidth: 1,
+    borderBottomColor: '#363b5d',
+    borderRadius: 10,
+    paddingHorizontal: 10,
     fontFamily: FONT_FAMILY.normal,
   },
   welcomeText: {
@@ -35,14 +45,17 @@ export const Loginstyles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 30,
-    padding: 20,
+    padding: 15,
+    margin:30,
   },
   signInText: {
-    fontSize: 28,
+    fontSize: 20,
     color: 'white',
     textAlign: 'left',
     fontFamily: FONT_FAMILY.normal,
-    marginBottom: 30,
+    
+    marginLeft: 30,
+    marginTop: 30,
   },
   submitButton: {
     borderColor: PRIMARY_BUTTON_BLUE,
@@ -61,14 +74,14 @@ export const Loginstyles = StyleSheet.create({
   },
 
   forgotPasswordText: {
-    color: PRIMARY_COLOR,
+    color: LIGHT_BLUE,
     paddingBottom: 10,
     textAlign: 'center',
     paddingVertical: 20,
     fontFamily: FONT_FAMILY.light,
   },
   versionText: {
-    color: GREY_COLOR,
+      color: GREY_COLOR,
     fontSize: 14,
     fontFamily: FONT_FAMILY.light,
   },

@@ -1,16 +1,22 @@
+// export const PRIMARY_COLOR = '#94584c';
 export const PRIMARY_COLOR = '#0A1650';
-export const SECONDARY_COLOR = '#79ca14';
+// export const SECONDARY_COLOR = '#79ca14';
+export const SECONDARY_COLOR = '#56b89d';
 export const PINK_COLOR = '#bb0a1e'
 export const WHITE_COLOR = '#ffffff';
 export const GREEN_COLOR = '#609E28'
 export const BLACK_COLOR = '#000';
 export const LIGHT_GREY = '#AEB6BF';
+// export const PRIMARY_BUTTON_BLUE = '#d6b7b1';
 export const PRIMARY_BUTTON_BLUE = '#363B5D';
-// export const PRIMARY_BUTTON_BLUE = '#007bff';
 export const PLACEHOLDER_COLOR = '#363b5d'
 export const DARK_BLUE = '#151831';
+// export const DARK_BLUE = '#94584c';
 export const LIGHT_GREEN = '#F5FFE9';
 export const LIGHT_BLUE = 'rgb(237, 243, 249)';
+export const LIGHT_YELLOW = '#FFF9E6';
+export const ORANGE = 'orange';
+
 
 export const GREY_COLOR = '#979797';
 export const RED_COLOR = "#F2664A"

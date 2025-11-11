@@ -14,6 +14,7 @@ const Version = DeviceInfo.getVersion()
 export const CustomDrawerContent = (props) => {
   const data = useSelector((state) => state?.auth?.userData?.data?.data);
   const dispatch=useDispatch()
+  console.log('\x1b[36m%s\x1b[0m', data, '---------------------- data ---------------------');
     const [url, seturl] = useState(null);
      const fetchUrl = async () => {
   
@@ -29,7 +30,7 @@ export const CustomDrawerContent = (props) => {
           seturl(response.data)
         } catch (err) {
             console.log(err,"eklnsdfsdklfsdfklds")
-          return alert('Somthing went wroung.')
+          return alert('No internet connection.')
         }
       };
       useEffect(() => {
@@ -65,7 +66,7 @@ export const CustomDrawerContent = (props) => {
           style={{ marginTop: 10, alignItems: "center" }}>
           <Avatar.Image
             size={60}
-            source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }}
+            source={{ uri:  Array.isArray(data) ?`https://dynamixclubedepalma.co.in/clubdepalma/api/profile_pictures/${data[0].profile_image}`:"https://randomuser.me/api/portraits/men/1.jpg" }}
             style={{ backgroundColor: "white" }}
           />
           <Icons
@@ -107,8 +108,21 @@ export const CustomDrawerContent = (props) => {
             labelStyle={{ color: "white", fontFamily: FONT_FAMILY.normal }}
             onPress={() =>
               props.navigation.navigate("Bookings", {
-                index: -1,
+                index: -2,
                 name: "Bookings",
+              })
+            }
+          />
+          <DrawerItem
+            icon={({ color, size }) => (
+              <Icon name="tennisball-sharp" color={"white"} size={size} />
+            )}
+            label="My Players"
+            labelStyle={{ color: "white", fontFamily: FONT_FAMILY.normal }}
+            onPress={() =>
+              props.navigation.navigate("Players", {
+                index: -1,
+                name: "Players",
               })
             }
           />
@@ -133,12 +147,12 @@ export const CustomDrawerContent = (props) => {
                 size={size}
               />
             )}
-            label="Terms & Conditions"
+            label="Rules & Regulations"
             labelStyle={{ color: "white", fontFamily: FONT_FAMILY.normal }}
             onPress={() =>
               props.navigation.navigate("Info", {
                 index: 1,
-                name: "Terms & Conditions",
+                name: "Rules & Regulations",
               })
             }
           />

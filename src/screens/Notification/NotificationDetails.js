@@ -20,6 +20,7 @@ import { DARK_BLUE } from "../../util/colors";
 
 const NotificationDetailScreen = ({ route, navigation }) => {
   const { data } = route?.params;
+  console.log('\x1b[36m%s\x1b[0m', data, '---------------------- data ---------------------');
   const [isModalVisible, setModalVisible] = useState(false);
 const handleImagePress = () => {
     setModalVisible(true);
@@ -98,14 +99,14 @@ const handleImagePress = () => {
           <View style={styles.mainView}>
             <Text style={styles.short_descText}>Short Description</Text>
             <Text
-              style={{ marginBottom: 15, fontFamily: FONT_FAMILY.semiBold }}>
+              style={{ marginBottom: 15, fontFamily: FONT_FAMILY.semiBold,color:'grey' }}>
               {data?.short_descriptions}
             </Text>
             <Text style={styles.descText}>Description</Text>
             <RenderHTML
               source={{ html: data?.description }}
               contentWidth={width - 60}
-              baseStyle={{ fontFamily: FONT_FAMILY.normal }}
+              baseStyle={{ fontFamily: FONT_FAMILY.normal,color:'black' }}
             />
           </View>
         </ScrollView>
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     fontFamily: FONT_FAMILY.semiBold,
-    color: "#89919e",
+    color: "#464646",
   },
   closeButton: {
     position: "absolute",

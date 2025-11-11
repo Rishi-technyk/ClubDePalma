@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TAG_LOGIN_SERVICES = 'LOGIN_SERVICES';
 
-export async function loginWith(username, password, data) {
+export async function loginWith(username, password, data,notificationPermission) {
   try {
     const apiRequestObject = {
       path: ENDPOINT.login,
@@ -16,6 +16,7 @@ export async function loginWith(username, password, data) {
         device_id: data.deviceId,
         device_type: data.devicePlatform,
         device_app_version: data.deviceVersion,
+        has_notification_permission:notificationPermission
       },
     };
     const response = await api.javascriptPost(apiRequestObject);

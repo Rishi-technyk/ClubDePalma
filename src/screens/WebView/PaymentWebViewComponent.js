@@ -46,14 +46,15 @@ useEffect(() => {
         break;
       case 'process_result':
         const status = response.payload?.status || '';
-        if (status === 'user_aborted' || status === 'backpressed') {
+        if(status === 'charged'){
+          getSuccessData1(route?.params?.data, true,resp);
+        }else if (status === 'user_aborted' || status === 'backpressed'|| status==='authorization_failed' ) {
           console.log('Payment cancelled by user or back pressed.');
            getSuccessData1(route?.params?.data, false,resp);
           // handle cancel
         } else {
-          console.log('Payment processed successfully, navigating with orderId:', orderId);
+         getSuccessData1(route?.params?.data, false,resp);
          
-           getSuccessData1(route?.params?.data, true,resp);
         }
         break;
       default:
@@ -62,7 +63,11 @@ useEffect(() => {
   });
 
   const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-    return !HyperSdkReact.isNull() && HyperSdkReact.onBackPressed();
+     if (!HyperSdkReact.isNull()) {
+    HyperSdkReact.onBackPressed(); // still give SDK a chance
+  }
+  navigation.navigate('Home');
+  return true;
   });
 
   return () => {

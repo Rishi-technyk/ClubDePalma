@@ -14,12 +14,13 @@ export const ModalStyles = StyleSheet.create({
     color: "black",
   },
   headingContainer: {
-    borderBottomWidth: 0.3,
     padding: 10,
-    borderBlockColor:'grey',
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",backgroundColor:'white',marginBottom:20
+    justifyContent: "space-between",
+    borderBottomWidth:0.7,
+    borderBlockColor:'grey'
+   
   },
   innerModalCont: {
     flex: 0.5,
@@ -27,6 +28,7 @@ export const ModalStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 10,
+
     // borderRadius: 10,
   },
   listRow: { flexDirection: "row", margin: 20 },

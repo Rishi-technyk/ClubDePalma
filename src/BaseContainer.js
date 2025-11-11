@@ -1,18 +1,17 @@
 
-import React, {  useEffect, useLayoutEffect, } from 'react';
-import {  StyleSheet,   } from 'react-native';
+import React, {  useEffect,  } from 'react';
 import { useDispatch } from 'react-redux';
 import { setDeviceToken, setModal, setPlatform, setVersion } from './store/actions/authActions';
 import DeviceInfo from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
-import { createStackNavigator } from '@react-navigation/stack';
 import AppDrawerNavigator from './HomeNavigation';
+import { useNavigation } from '@react-navigation/native';
+import { navigate } from './Navigation/ NavigationService';
 
-const Tabs = createStackNavigator()
 const BaseContainer = () => {
   const dispatch = useDispatch();
-
+const navigation=useNavigation()
   const updateDeviceConfig = async () => {
     
     const deviceTokenId = await messaging().getToken();
@@ -29,10 +28,12 @@ const BaseContainer = () => {
   const setupNotifications = async () => {
     try {
       await requestNotificationPermission();
-
       messaging().onMessage(async (remoteMessage) => {
         console.log('Received remote message------------------>>>>>>>>:', remoteMessage);
         await displayNotification(remoteMessage);
+        if (remoteMessage?.data?.screen) {
+          navigate(remoteMessage?.data?.screen, remoteMessage.data);
+        }
       });
 
       messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -45,7 +46,6 @@ const BaseContainer = () => {
           },
         });
       });
-
       messaging().onNotificationOpenedApp((remoteMessage) => {
         console.log('Notification opened:===================----------->', remoteMessage);
         // Handle navigation or other logic here
@@ -54,6 +54,10 @@ const BaseContainer = () => {
       const initialNotification = await messaging().getInitialNotification();
       if (initialNotification) {
         console.log('Initial notification:=--------=========------===========000000099999', initialNotification);
+        if (initialNotification?.data?.screen) {
+        
+          navigate(initialNotification?.data?.screen, initialNotification.data);
+        }
         // Handle initial notification if needed
       }
     } catch (error) {
@@ -63,11 +67,15 @@ const BaseContainer = () => {
 
   const requestNotificationPermission = async () => {
     try {
+     const permission= notifee.requestPermission()
+      if (permission.authorizationStatus === notifee.AuthorizationStatus.DENIED) {
+        console.warn('Notification permission denied');
+        return;
+      }
       const authStatus = await messaging().requestPermission();
       const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
       if (!enabled) {
 
       }
@@ -78,7 +86,7 @@ const BaseContainer = () => {
 
   useEffect(() => {
     requestNotificationPermission()
-
+   
       updateDeviceConfig();
       setupNotifications();
   }, [])

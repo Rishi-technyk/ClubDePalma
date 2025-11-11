@@ -177,7 +177,7 @@ const AffilatedClubScreen = ({navigation}) => {
             <BackIcon />
             <View style={styles.logoContainer}>
               <Image
-                source={require('../../assets/images/clubdepalma.png')}
+                source={require('../../assets/images/clubdepalma.jpg')}
                 style={styles.logo}
               />
               <Text style={styles.clubTitle}>MB Club</Text>
@@ -261,7 +261,7 @@ const AffilatedClubScreen = ({navigation}) => {
                   backgroundColor: 'white',
                 }}>
                 <Image
-                  source={require('../../assets/images/clubdepalma.png')}
+                  source={require('../../assets/images/clubdepalma.jpg')}
                   style={{
                     height: 30,
                     width: 30,

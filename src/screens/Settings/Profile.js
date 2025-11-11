@@ -6,17 +6,95 @@ import {
   Dimensions,
   ScrollView,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header';
 import {Avatar, Card, Icon} from 'react-native-paper';
-import {FONT_FAMILY} from '../../util/constant';
+import {DOMAIN, FONT_FAMILY} from '../../util/constant';
+import {launchImageLibrary} from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginSuccess } from '../../store/actions/authActions';
+import { Toast } from 'react-native-toast-notifications';
+
 
 const Profile = () => {
   const [data] = useSelector(state => state?.auth?.userData?.data?.data);
-  console.log(data);
+  const token = useSelector(state => state?.auth?.userData?.data?.token);
+  const [profileImage, setProfileImage] = useState(
+    'https://randomuser.me/api/portraits/men/1.jpg'
+  );
 
-  var arr = [
+  const dispatch = useDispatch();
+ console.log('\x1b[34m%s\x1b[0m', data, '---------------------- data ---------------------');
+const openImagePicker = () => {
+  const options = {
+    mediaType: 'photo',
+    quality: 1,
+  };
+
+const updateProfilePicture = async (imageUri) => {
+  const apiUrl = DOMAIN.BASE + 'member/upload-profile'; // 🔁 Change to your API URL
+
+  const formData = new FormData();
+  formData.append('profile_image', {
+    uri: imageUri,
+    type: 'image/jpeg', // or 'image/png' based on your image
+    name: 'profile.jpg', // or any name with extension
+  });
+
+  try {
+   const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData,
+    });
+    const result = await response.json();
+    console.log('Profile picture uploaded:', result);
+    if(result.status) {
+      setProfileImage(imageUri);
+     const data=await AsyncStorage.getItem('user');
+        if (data) {
+          const userData = JSON.parse(data);
+         userData.data[0].profile_image = result.image_url;
+          AsyncStorage.setItem('user', JSON.stringify(userData));
+          dispatch(loginSuccess(userData))
+        }
+       Toast.show(result.message || 'Profile picture updated successfully!', {
+        type: 'success',
+      });
+    } else {
+      console.error('Failed to upload profile picture:', result.message);
+    }
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+  }
+};
+
+  try {
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.error('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        // Handle the selected image
+        const source = {uri: response.assets[0].uri};
+        setProfileImage(source.uri);
+        updateProfilePicture(source.uri);
+      }
+    });
+  } catch (error) {
+    console.error('Error opening image picker:', error);
+  }
+};
+var arr = [
     {
       id: 1,
       name: 'Member ID:',
@@ -65,12 +143,13 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <Header title={'Profile'} />
-
+      
       <ScrollView>
-        <View style={styles.body}>
+        <TouchableOpacity onPress={openImagePicker} style={styles.body}>
+
           <Avatar.Image
             size={100}
-            source={{uri: 'https://randomuser.me/api/portraits/men/1.jpg'}}
+            source={{uri: `https://dynamixclubedepalma.co.in/clubdepalma/api/profile_pictures/${data.profile_image}` || profileImage}}
             style={{backgroundColor: 'white', margin: 20}}
           />
           <Text
@@ -81,7 +160,7 @@ const Profile = () => {
             }}>
             {data.DisplayName || 'User'}
           </Text>
-        </View>
+        </TouchableOpacity>
         <FlatList data={arr} numColumns={2} renderItem={renderUserDate} />
       </ScrollView>
     </View>
